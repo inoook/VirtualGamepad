@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5701935476790276658
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7783447213832601826}
+  - component: {fileID: 7051359343188447837}
+  m_Layer: 0
+  m_Name: ViGEmPS4Gamepad
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7783447213832601826
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5701935476790276658}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7051359343188447837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5701935476790276658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 360c07f9294666a42bf1bce8b2a17ad1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftThumbX: 0
+  leftThumbY: 0
+  rightThumbX: 0
+  rightThumbY: 0
+  leftTrigger: 0
+  rightTrigger: 0
+  btnA: 0
+  btnB: 0
+  btnX: 0
+  btnY: 0
+  btnShoulderL: 0
+  btnShoulderR: 0
+  btnGuide: 0
+  btnStart: 0
+  btnLeftThumb: 0
+  btnRightThumb: 0
+  btnPad: 0
+  btn6: 0
+  btn7: 0
+  btn8: 0
+  btn9: 0
+  btn10: 0
+  povDirection: 0
+  largeMotor: 0
+  smallMotor: 0
+  btn11: 0
+  btn12: 0
+  btn13: 0
+  ledNumber: 0
