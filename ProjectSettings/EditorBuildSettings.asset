@@ -8,4 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/ViGEmTools/Scenes/VirtualGamepad.unity
     guid: 90f42fa9eecdebc469fcd3addab29ed4
+  - enabled: 1
+    path: Assets/ViGEmTools/ViGEmOSC/VirtualGamepad_OSC.unity
+    guid: 57a9e201b15954847b975be893f4b70f
   m_configObjects: {}

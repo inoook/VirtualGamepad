@@ -7,6 +7,9 @@ using Nefarius.ViGEm.Client.Targets;
 using Nefarius.ViGEm.Client.Targets.Xbox360;
 using Nefarius.ViGEm.Client.Targets.DualShock4;
 
+/// <summary>
+/// ViGEm簡単なテスト
+/// </summary>
 public class ViGEmTest : MonoBehaviour
 {
     ViGEmClient viGEmClient = null;

@@ -41,6 +41,19 @@ public class ViGEmGamePad : MonoBehaviour
     public virtual void OnLeftTrigger(float v) { }
     public virtual void OnRightTrigger(float v) { }
 
+    public float LeftThumbX
+    {
+        set {
+            LeftThumb = new Vector2(value, LeftThumb.y);
+        }
+    }
+    public float LeftThumbY
+    {
+        set {
+            LeftThumb = new Vector2(LeftThumb.x, value);
+        }
+    }
+
     public Vector2 LeftThumb
     {
         set {
@@ -51,6 +64,20 @@ public class ViGEmGamePad : MonoBehaviour
         }
         get => new Vector2(leftThumbX, leftThumbY);
     }
+
+    public float RightThumbX
+    {
+        set {
+            RightThumb = new Vector2(value, RightThumb.y);
+        }
+    }
+    public float RightThumbY
+    {
+        set {
+            RightThumb = new Vector2(RightThumb.x, value);
+        }
+    }
+
     public Vector2 RightThumb
     {
         set {
@@ -322,28 +349,4 @@ public class ViGEmGamePad : MonoBehaviour
         get { return smallMotor; }
     }
 
-    ////
-    //[SerializeField] bool useUpdateValue = false;
-
-    //public virtual void ForceUpdate()
-    //{
-    //    LeftThumb = new Vector2(leftThumbX, leftThumbY);
-    //    RightThumb = new Vector2(rightThumbX, rightThumbY);
-    //    RightTrigger = rightTrigger;
-    //    LeftTrigger = leftTrigger;
-
-    //    BtnA = btnA;
-    //    BtnB = btnB;
-    //    BtnX = btnX;
-    //    BtnY = btnY;
-    //    // TODO: 更新の必要なもの追加
-    //}
-    //private void Update()
-    //{
-    //    if (useUpdateValue)
-    //    {
-    //        // イベントではなくこのMonoで値を更新するとき
-    //        ForceUpdate();
-    //    }
-    //}
 }
