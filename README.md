@@ -32,3 +32,14 @@ Unityを起動して実行
 ```
 
 コンパネのゲームパッドに Controller (XBOX 360 For Windows) と表示され、上記入力値が反映される。
+
+
+# OSC
+
+Package Manager で Scoped Registry の登録
+
+Name: hecomi
+URL: https://registry.npmjs.com
+Scope: com.hecomi
+
+https://github.com/hecomi/uOSC
