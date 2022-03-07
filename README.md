@@ -38,8 +38,8 @@ Unityを起動して実行
 
 Package Manager で Scoped Registry の登録
 
-Name: hecomi　　
-URL: https://registry.npmjs.com　　
-Scope: com.hecomi　　
+Name: hecomi  
+URL: https://registry.npmjs.com  
+Scope: com.hecomi  
 
 https://github.com/hecomi/uOSC
