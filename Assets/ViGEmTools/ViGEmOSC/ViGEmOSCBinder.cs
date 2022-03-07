@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using nOSC;
+using uOSC;
 
 /// <summary>
 /// OSCでの入力を仮想Gamepad入力へ反映
@@ -11,7 +11,7 @@ public class ViGEmOSCBinder : MonoBehaviour
 {
     [SerializeField] ViGEmGamePad gamePad = null;
 
-	[SerializeField] OscReceiver udpReciever;
+	[SerializeField] uOscServer oscReciever = null;
 
 	[SerializeField] bool autoConnect = true;
 
@@ -23,72 +23,41 @@ public class ViGEmOSCBinder : MonoBehaviour
 
 	void Connect()
 	{
-		if (udpReciever == null)
+		if (oscReciever == null)
 		{
-			udpReciever = this.gameObject.GetComponent<OscReceiver>();
+			oscReciever = this.gameObject.GetComponent<uOscServer>();
 		}
-		udpReciever.Setup();
-		udpReciever.SetAddressHandler("/leftThumb/1", OnLeftThumbHandler);
-		udpReciever.SetAddressHandler("/rightThumb/1", OnRightThumbHandler);
-		udpReciever.SetAddressHandler("/leftTrigger", OnLeftTriggerHandler);
-		udpReciever.SetAddressHandler("/rightTrigger", OnRightTriggerHandler);
-
-        udpReciever.SetAddressHandler("/btnA", OnBtnAHandler);
-        udpReciever.SetAddressHandler("/btnB", OnBtnBHandler);
-
-        udpReciever.SetAllMessageHandler(OnAllOscFunc);
-	}
-	void OnLeftThumbHandler(OscMessage oscM)
-	{
-		gamePad.LeftThumb = new Vector2(oscM.getArgAsFloat(0), oscM.getArgAsFloat(1));
-	}
-	void OnRightThumbHandler(OscMessage oscM)
-	{
-		gamePad.RightThumb = new Vector2(oscM.getArgAsFloat(0), oscM.getArgAsFloat(1));
-	}
-	void OnLeftTriggerHandler(OscMessage oscM)
-	{
-		gamePad.LeftTrigger = oscM.getArgAsFloat(0);
-	}
-	void OnRightTriggerHandler(OscMessage oscM)
-	{
-		gamePad.RightTrigger = oscM.getArgAsFloat(0);
-	}
-	void OnBtnAHandler(OscMessage oscM)
-	{
-		gamePad.BtnA = (oscM.getArgAsFloat(0) == 1);
-	}
-	void OnBtnBHandler(OscMessage oscM)
-	{
-		gamePad.BtnB = (oscM.getArgAsFloat(0) == 1);
+		oscReciever.onDataReceived.AddListener(OnDataReceived);
 	}
 
-	void OnAllOscFunc(OscMessage oscM)
-    {
-        //Debug.Log($"oscM: { oscM.Address}" );
-    }
-
-    void Disconnect()
+	void OnDataReceived(uOSC.Message message)
 	{
-		udpReciever?.Close();
+		string address = message.address;
+		if (address == "/leftThumb/1")
+		{
+			gamePad.LeftThumb = new Vector2((float)message.values[0], (float)message.values[1]);
+		}
+		else if (address == "/rightThumb/1")
+		{
+			gamePad.RightThumb = new Vector2((float)message.values[0], (float)message.values[1]);
+		}
+		else if (address == "/leftTrigger")
+		{
+			gamePad.LeftTrigger = (float)message.values[0];
+		}
+		else if (address == "/rightTrigger")
+		{
+			gamePad.RightTrigger = (float)message.values[0];
+		}
+		else if (address == "/btnA")
+		{
+			gamePad.BtnA = (float)message.values[0] == 1;
+		}
+		else if (address == "/btnB")
+		{
+			gamePad.BtnB = (float)message.values[0] == 1;
+		}
 	}
 
-    //bool IsOpen()
-    //{
-    //	if (udpReciever == null)
-    //	{
-    //		return false;
-    //	}
-    //	else
-    //	{
-    //		return udpReciever.IsOpen();
-    //	}
-    //}
-
-    private void OnDestroy()
-    {
-		Disconnect();
-
-	}
 
 }

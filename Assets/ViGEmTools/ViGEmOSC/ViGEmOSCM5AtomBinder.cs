@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using nOSC;
+using uOSC;
 
 /// <summary>
 /// OSCでの入力を仮想Gamepad入力へ反映
@@ -10,7 +10,7 @@ public class ViGEmOSCM5AtomBinder : MonoBehaviour
 {
     [SerializeField] ViGEmGamePad gamePad = null;
 
-	[SerializeField] OscReceiver udpReciever;
+	[SerializeField] uOscServer oscReciever;
 
 	[SerializeField] bool autoConnect = true;
 
@@ -22,37 +22,59 @@ public class ViGEmOSCM5AtomBinder : MonoBehaviour
 
 	void Connect()
 	{
-		if (udpReciever == null)
+		if (oscReciever == null)
 		{
-			udpReciever = this.gameObject.GetComponent<OscReceiver>();
+			oscReciever = this.gameObject.GetComponent<uOscServer>();
 		}
-		udpReciever.Setup();
-		udpReciever.SetAddressHandler("/btnA", OnBtnAHandler);
-		udpReciever.SetAddressHandler("/btnB", OnBtnBHandler);
+		oscReciever.onDataReceived.AddListener(OnDataReceived);
 
-		udpReciever.SetAddressHandler("/posture", OnPostureHandler);
-		//udpReciever.SetAddressHandler("/acc", OnAccHandler);
-		//udpReciever.SetAddressHandler("/gyro", OnGyroHandler);
-
-		udpReciever.SetAllMessageHandler(OnAllOscFunc);
 	}
-
-	void OnBtnAHandler(OscMessage oscM)
+	void OnDataReceived(uOSC.Message message)
 	{
-		try
+		string address = message.address;
+		if (address == "/btnA")
 		{
-			gamePad.BtnA = (oscM.getArgAsInt(0) == 1);
+			gamePad.BtnA = (int)message.values[0] == 1;
 		}
-		catch{ }
-	}
-	void OnBtnBHandler(OscMessage oscM)
-	{
-		try
+		else if (address == "/btnB")
 		{
-			gamePad.BtnB = (oscM.getArgAsFloat(0) == 1);
+			gamePad.BtnB = (int)message.values[0] == 1;
 		}
-		catch { }
+		else if (address == "/posture")
+		{
+			float pitch = (float)message.values[0];
+			float roll = (float)message.values[1];
+			float yaw = (float)message.values[2];
+			if (useKalman)
+			{
+				pitch = kalmanFilter.Update(pitch);
+			}
+			pitchRollYaw.x = pitch;
+			pitchRollYaw.y = roll;
+			pitchRollYaw.z = yaw;
+
+			gamePad.LeftThumbX = Mathf.Clamp(pitch / range, -1, 1);
+
+			// float t_angle = -Mathf.Atan2(acc.x, acc.y) * Mathf.Rad2Deg;
+			gamePad.RightTrigger = Mathf.InverseLerp(rTriggerMin, rTiriggerMax, pitch);
+			//Debug.LogWarning($"Posture: {pitch}, {roll}, {yaw}");
+		}
+		else if (address == "/acc")
+		{
+			float x = (float)message.values[0];
+			float y = (float)message.values[1];
+			float z = (float)message.values[2];
+			//Debug.LogWarning($"Acc: {x}, {y}, {z}");
+		}
+		else if (address == "/gyro")
+		{
+			float x = (float)message.values[0];
+			float y = (float)message.values[1];
+			float z = (float)message.values[2];
+			//Debug.LogWarning($"Gyro: {x}, {y}, {z}");
+		}
 	}
+
 	//
 	[SerializeField] Vector3 pitchRollYaw = Vector3.zero;
 	[SerializeField] float range = -90;
@@ -62,50 +84,5 @@ public class ViGEmOSCM5AtomBinder : MonoBehaviour
 
 	[SerializeField] bool useKalman = false;
 	[SerializeField] Kalman.KalmanFilter1D kalmanFilter = new Kalman.KalmanFilter1D();
-
-	void OnPostureHandler(OscMessage oscM)
-	{
-		float pitch = oscM.getArgAsFloat(0);
-		float roll = oscM.getArgAsFloat(1);
-		float yaw = oscM.getArgAsFloat(2);
-		if (useKalman)
-		{
-			pitch = kalmanFilter.Update(pitch);
-		}
-		pitchRollYaw.x = pitch;
-		pitchRollYaw.y = roll;
-		pitchRollYaw.z = yaw;
-
-		gamePad.LeftThumbX = Mathf.Clamp(pitch / range, -1, 1);
-
-		// float t_angle = -Mathf.Atan2(acc.x, acc.y) * Mathf.Rad2Deg;
-		gamePad.RightTrigger = Mathf.InverseLerp(rTriggerMin, rTiriggerMax, pitch);
-		//Debug.LogWarning($"Posture: {pitch}, {roll}, {yaw}");
-	}
-	void OnAccHandler(OscMessage oscM)
-	{
-		Debug.LogWarning($"Acc: {oscM.getArgAsFloat(0)}, {oscM.getArgAsFloat(1)}, {oscM.getArgAsFloat(2)}");
-	}
-	void OnGyroHandler(OscMessage oscM)
-	{
-		Debug.LogWarning($"Gyro: {oscM.getArgAsFloat(0)}, {oscM.getArgAsFloat(1)}, {oscM.getArgAsFloat(2)}");
-	}
-	//
-
-	void OnAllOscFunc(OscMessage oscM)
-    {
-        //Debug.Log($"oscM: { oscM.Address}" );
-    }
-
-    void Disconnect()
-	{
-		udpReciever?.Close();
-	}
-
-    private void OnDestroy()
-    {
-		Disconnect();
-
-	}
 
 }
